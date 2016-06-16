@@ -4,6 +4,7 @@ var app = express();
 var server = require('http').createServer(app);
 var io = require('../..')(server);
 var port = process.env.PORT || 7778;
+var fs = require('fs');
 
 server.listen(port, function () {
   console.log('Server listening at port %d', port);
@@ -24,36 +25,49 @@ io.on('connection', function (socket) {
 
 var temporal = require("temporal");
 var startIndex = 0;
-var endIndex = 10;
+var endIndex = 1000;
 var incrementIndex = 1;
 var delay = 1500;
-var array = [1, 2, 3, 4, 5];
 var tasks = [];
 
 
 while ( startIndex < endIndex ) {
-  for ( var i = 0; i < array.length; i++ ) {
     tasks.push({
       delay: delay,
       task: function() {
-        console.log(i, Date.now());
+        //console.log(Date.now());
         // do stuff
+
+// con lectura asincrona
+/*
+      fs.readFile('./tracking_wrc.json', 'utf8', function (err,data) {
+        if (err) {
+          return console.log(err);
+        }        
         socket.emit('new tracking data', {
-          geojson: '[{"geometry": {"type": "Point", "coordinates": [8.3167, 40.5626]}, "type": "Feature", "properties": {"alias": "FUSI Matteo", "alarm_state": "0", "license": "092", "vehicle_state": "", "pos_date": "1455455257500", "tracking_state": "STOP", "speed": 0.1000, "heading": 116.6000}}]'
+          geojson: data
         });
+      });
+  
+*/
+// con lectura sincrona
+      var data = fs.readFileSync('./tracking_wrc.json');
+      console.log(data.toString());
+      socket.emit('new tracking data', {
+          geojson: data.toString()
+        });
+      
+
       }
     });
-  }
+
+
+
+
+
 
   startIndex = startIndex + incrementIndex;
 
-  tasks.push({
-    delay: delay,
-    task: function() {
-      console.log(startIndex, Date.now());
-      // do stuff
-    }
-  })
 }
 
 
