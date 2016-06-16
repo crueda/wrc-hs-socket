@@ -150,7 +150,7 @@ $(function() {
   }
 
   // New tracking data
-  function newTrackingData (data) {
+  function newTrackingData0 (data) {
     //data.typing = true;
     //data.message = 'new tracking data';
     //addChatMessage(data);
@@ -274,10 +274,12 @@ $(function() {
   });
 
   // Whenever the server emits 'new tracking data', update the map
+  /*
   socket.on('new tracking data', function (data) {
     //alert("en evento");
     console.log("en evento");
     newTrackingData(data);
   });
+  */
 
 });
